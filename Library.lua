@@ -1020,7 +1020,38 @@ do
         end;
 
         function KeyPicker:KeyName(Key)
-            return (Key or KeyPicker.Value).Name:gsub("%l+", "");
+            Key = Key or KeyPicker.Value;
+            local Name = Key.Name;
+
+            if #Name <= 3 then
+                return Name;
+            end;
+
+            local OnlyUpper = Name:gsub("%l+", "");
+            if #OnlyUpper > 1 then
+                return OnlyUpper;
+            end;
+
+            local ShorternedName = Name:sub(1, 1);
+            local up = math.ceil(#Name / 3);
+            local i = 1;
+            local run = true;
+            while run do
+                i = i + up;
+
+                if (i >= #Name) then
+                    i = #Name;
+                    run = false;
+                end;
+
+                ShorternedName = ShorternedName .. Name:sub(i, i)
+            end;
+
+            if #ShorternedName > 3 then
+                ShorternedName = ShorternedName:sub(1, 2) .. ShorternedName:sub(#ShorternedName);
+            end;
+
+            return ShorternedName;
         end;
 
         function KeyPicker:IsPressed(Key)
