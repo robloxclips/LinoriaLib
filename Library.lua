@@ -1110,8 +1110,8 @@ do
 
         function KeyPicker:SetValue(Data)
             local Key, Mode = Data[1], Data[2];
-            DisplayLabel.Text = KeyPicker:KeyName();
             KeyPicker.Value = KeyPicker:NameToKey(Key);
+            DisplayLabel.Text = KeyPicker:KeyName();
             ModeButtons[Mode]:Select();
             KeyPicker:Update();
         end;
