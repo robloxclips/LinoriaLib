@@ -881,8 +881,8 @@ do
                 else
                     return DoesEnumExist(Enum.KeyCode, Name) or DoesEnumExist(Enum.UserInputType, Name);
                 end
-            elseif typeof(Name) == "Enum" and table.find({Enum.KeyCode, Enum.UserInputType}, Info.EnumType) then
-                return Info.Value;
+            elseif typeof(Name) == "EnumItem" and table.find({Enum.KeyCode, Enum.UserInputType}, Name.EnumType) then
+                return Name;
             end;
 
             error("invalid key value");
