@@ -279,7 +279,7 @@ LeftGroupBox:AddLabel('Keybind'):AddKeyPicker('KeyPicker', {
     -- Example: Keybind which you use to toggle flyhack, etc.
     -- Changing the toggle disables the keybind state and toggling the keybind switches the toggle state
 
-    Default = 'MB2', -- String as the name of the keybind (MB1, MB2 for mouse buttons)
+    Default = Enum.UserInputType.MouseButton2, -- String as the name of the keybind (MB1, MB2 for mouse buttons) OR Enum
     SyncToggleState = false,
 
 

@@ -147,7 +147,7 @@ end;
 function Library:MakeDraggable(Instance, Cutoff)
     Instance.Active = true;
 
-   Instance.InputBegan:Connect(function(Input)
+    Instance.InputBegan:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
             local ObjPos = Vector2.new(
                 Mouse.X - Instance.AbsolutePosition.X,
@@ -358,7 +358,7 @@ function Library:Unload()
         Connection:Disconnect()
     end
 
-     -- Call our unload callback, maybe to undo some hooks etc
+    -- Call our unload callback, maybe to undo some hooks etc
     if Library.OnUnload then
         Library.OnUnload()
     end
@@ -887,6 +887,40 @@ do
 
             error("invalid key value");
         end;
+        function KeyPicker:KeyName(Key)
+            Key = Key or KeyPicker.Value;
+            local Name = Key.Name;
+
+            if #Name <= 3 then
+                return Name;
+            end;
+
+            local OnlyUpper = Name:gsub("%l+", "");
+            if #OnlyUpper > 1 then
+                return OnlyUpper;
+            end;
+
+            local ShorternedName = Name:sub(1, 1);
+            local up = math.ceil(#Name / 3);
+            local i = 1;
+            local run = true;
+            while run do
+                i = i + up;
+
+                if (i >= #Name) then
+                    i = #Name;
+                    run = false;
+                end;
+
+                ShorternedName = ShorternedName .. Name:sub(i, i)
+            end;
+
+            if #ShorternedName > 3 then
+                ShorternedName = ShorternedName:sub(1, 2) .. ShorternedName:sub(#ShorternedName);
+            end;
+
+            return ShorternedName;
+        end;
 
         KeyPicker.Value = KeyPicker:NameToKey(Info.Default);
 
@@ -927,7 +961,7 @@ do
         local DisplayLabel = Library:CreateLabel({
             Size = UDim2.new(1, 0, 1, 0);
             TextSize = 13;
-            Text = Info.Default;
+            Text = KeyPicker:KeyName();
             TextWrapped = true;
             ZIndex = 8;
             Parent = PickInner;
@@ -1017,41 +1051,6 @@ do
             end;
 
             ModeButtons[Mode] = ModeButton;
-        end;
-
-        function KeyPicker:KeyName(Key)
-            Key = Key or KeyPicker.Value;
-            local Name = Key.Name;
-
-            if #Name <= 3 then
-                return Name;
-            end;
-
-            local OnlyUpper = Name:gsub("%l+", "");
-            if #OnlyUpper > 1 then
-                return OnlyUpper;
-            end;
-
-            local ShorternedName = Name:sub(1, 1);
-            local up = math.ceil(#Name / 3);
-            local i = 1;
-            local run = true;
-            while run do
-                i = i + up;
-
-                if (i >= #Name) then
-                    i = #Name;
-                    run = false;
-                end;
-
-                ShorternedName = ShorternedName .. Name:sub(i, i)
-            end;
-
-            if #ShorternedName > 3 then
-                ShorternedName = ShorternedName:sub(1, 2) .. ShorternedName:sub(#ShorternedName);
-            end;
-
-            return ShorternedName;
         end;
 
         function KeyPicker:IsPressed(Key)
