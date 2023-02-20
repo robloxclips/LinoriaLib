@@ -24,7 +24,7 @@ local ThemeManager = {} do
 		local scheme = data[2]
 		for idx, col in next, customThemeData or scheme do
 			self.Library[idx] = Color3.fromHex(col)
-			
+
 			if Options[idx] then
 				Options[idx]:SetValueRGB(Color3.fromHex(col))
 			end
@@ -46,7 +46,7 @@ local ThemeManager = {} do
 		self.Library:UpdateColorsUsingRegistry()
 	end
 
-	function ThemeManager:LoadDefault()		
+	function ThemeManager:LoadDefault()
 		local theme = 'Default'
 		local content = isfile(self.Folder .. '/themes/default.txt') and readfile(self.Folder .. '/themes/default.txt')
 
@@ -103,11 +103,11 @@ local ThemeManager = {} do
 		groupbox:AddDropdown('ThemeManager_CustomThemeList', { Text = 'Custom themes', Values = self:ReloadCustomThemes(), AllowNull = true, Default = 1 })
 		groupbox:AddInput('ThemeManager_CustomThemeName', { Text = 'Custom theme name' })
 
-		groupbox:AddButton({ Text = 'Load custom theme', Func = function() 
-			self:ApplyTheme(Options.ThemeManager_CustomThemeList.Value) 
+		groupbox:AddButton({ Text = 'Load custom theme', Func = function()
+			self:ApplyTheme(Options.ThemeManager_CustomThemeList.Value)
 		end })
 
-		groupbox:AddButton({ Text = 'Save custom theme', Func = function() 
+		groupbox:AddButton({ Text = 'Save custom theme', Func = function()
 			self:SaveCustomTheme(Options.ThemeManager_CustomThemeName.Value)
 
 			Options.ThemeManager_CustomThemeList.Values = self:ReloadCustomThemes()
@@ -149,7 +149,7 @@ local ThemeManager = {} do
 
 		local data = readfile(path)
 		local success, decoded = pcall(httpService.JSONDecode, httpService, data)
-		
+
 		if not success then
 			return nil
 		end
