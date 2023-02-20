@@ -3240,6 +3240,13 @@ function Library:CreateWindow(...)
             return Tab:AddTabbox({ Name = Name, Side = 2; });
         end;
 
+        function Tab:SetName(NewName)
+            TabButtonWidth = Library:GetTextBounds(NewName, Library.Font, 16);
+            TabButton.Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+            TabButtonLabel.Text = NewName;
+            Name = NewName;
+        end;
+
         TabButton.InputBegan:Connect(function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Tab:ShowTab();
