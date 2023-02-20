@@ -100,6 +100,15 @@ local function IsKeyPressed(Key)
         error("invalid key enumtype, " .. tostring(Key));
     end;
 end;
+local function GetDictKeys(Dict)
+    local Keys = {};
+
+    for Key, _ in next, Dict do
+        table.insert(Keys, Key);
+    end;
+
+    return Keys;
+end;
 
 function Library:SafeCallback(f, ...)
     if not Library.NotifyOnError then
@@ -2041,8 +2050,8 @@ do
         assert(Info.Text and Info.Values, 'Bad Dropdown Data');
 
         local Dropdown = {
-            Values = Info.Values;
-            Value = Info.Multi and {};
+            Values = Info.UseValuesAsValue and GetDictKeys(Info.Values) or Info.Values;
+            Value = Info.UseValuesAsValue and Info.Values or (Info.Multi and {} or nil);
             Multi = Info.Multi;
             Type = 'Dropdown';
             SpecialType = Info.SpecialType; -- can be either 'Player' or 'Team'
