@@ -89,6 +89,17 @@ local function DoesEnumExist(EnumType, Enum)
         return result;
     end
 end;
+local function IsKeyPressed(Key)
+    Key = Key or KeyPicker.Value;
+
+    if Key.EnumType == Enum.KeyCode then
+        return InputService:IsKeyDown(Key);
+    elseif Key.EnumType == Enum.UserInputType then
+        return InputService:IsMouseButtonPressed(Key);
+    else
+        error("invalid key enumtype, " .. tostring(Key));
+    end;
+end;
 
 function Library:SafeCallback(f, ...)
     if not Library.NotifyOnError then
@@ -1053,18 +1064,6 @@ do
             ModeButtons[Mode] = ModeButton;
         end;
 
-        function KeyPicker:IsPressed(Key)
-            Key = Key or KeyPicker.Value;
-
-            if Key.EnumType == Enum.KeyCode then
-                return InputService:IsKeyDown(Key);
-            elseif Key.EnumType == Enum.UserInputType then
-                return InputService:IsMouseButtonPressed(Key);
-            else
-                error("invalid key enumtype, " .. tostring(Key));
-            end;
-        end;
-
         function KeyPicker:Update()
             if Info.NoUI then
                 return;
@@ -1102,7 +1101,7 @@ do
                     return false;
                 end
 
-                return KeyPicker:IsPressed();
+                return IsKeyPressed(KeyPicker.Value);
             else
                 return KeyPicker.Toggled;
             end;
@@ -1185,7 +1184,7 @@ do
         Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
             if (not Picking) then
                 if KeyPicker.Mode == 'Toggle' then
-                    if (KeyPicker:IsPressed()) then
+                    if IsKeyPressed(KeyPicker.Value) then
                         KeyPicker.Toggled = not KeyPicker.Toggled;
                         KeyPicker:DoClick();
                     end;
@@ -3293,11 +3292,7 @@ function Library:CreateWindow(...)
     end
 
     Library:GiveSignal(InputService.InputBegan:Connect(function(Input, Processed)
-        if type(Library.ToggleKeybind) == 'table' and Library.ToggleKeybind.Type == 'KeyPicker' then
-            if Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode.Name == Library.ToggleKeybind.Value then
-                task.spawn(Library.Toggle)
-            end
-        elseif Input.KeyCode == Enum.KeyCode.RightControl or (Input.KeyCode == Enum.KeyCode.RightShift and (not Processed)) then
+        if Library.ToggleKeybind and typeof(Library.ToggleKeybind) == "table" and IsKeyPressed(Library.ToggleKeybind.Value) then
             task.spawn(Library.Toggle)
         end
     end))
