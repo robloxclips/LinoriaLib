@@ -90,8 +90,6 @@ local function DoesEnumExist(EnumType, Enum)
     end
 end;
 local function IsKeyPressed(Key)
-    Key = Key or KeyPicker.Value;
-
     if Key.EnumType == Enum.KeyCode then
         return InputService:IsKeyDown(Key);
     elseif Key.EnumType == Enum.UserInputType then
@@ -944,11 +942,6 @@ do
 
         KeyPicker.Value = KeyPicker:NameToKey(Info.Default);
 
-        if KeyPicker.SyncToggleState then
-            Info.Modes = { 'Toggle' }
-            Info.Mode = 'Toggle'
-        end
-
         local RelativeOffset = 0;
 
         for _, Element in next, Container:GetChildren() do
@@ -1105,15 +1098,13 @@ do
         function KeyPicker:GetState()
             if KeyPicker.Mode == 'Always' then
                 return true;
-            elseif KeyPicker.Mode == 'Hold' then
-                if KeyPicker.Value == 'None' then
-                    return false;
-                end
-
-                return IsKeyPressed(KeyPicker.Value);
-            else
-                return KeyPicker.Toggled;
             end;
+
+            if KeyPicker.Value == 'None' then
+                return false;
+            end;
+
+            return KeyPicker.Toggled;
         end;
 
         function KeyPicker:SetValue(Data)
@@ -1135,7 +1126,7 @@ do
 
         function KeyPicker:DoClick()
             if ParentObj.Type == 'Toggle' and KeyPicker.SyncToggleState then
-                ParentObj:SetValue(not ParentObj.Value)
+                ParentObj:SetValue(KeyPicker.Toggled)
             end
 
             Library:SafeCallback(KeyPicker.Callback, KeyPicker.Toggled)
@@ -1192,11 +1183,9 @@ do
 
         Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
             if (not Picking) then
-                if KeyPicker.Mode == 'Toggle' then
-                    if IsKeyPressed(KeyPicker.Value) then
-                        KeyPicker.Toggled = not KeyPicker.Toggled;
-                        KeyPicker:DoClick();
-                    end;
+                if (KeyPicker.Mode == 'Toggle' or KeyPicker.Mode == 'Hold') and (Input.KeyCode == KeyPicker.Value or Input.UserInputType == KeyPicker.Value) then
+                    KeyPicker.Toggled = not KeyPicker.Toggled;
+                    KeyPicker:DoClick();
                 end;
 
                 KeyPicker:Update();
@@ -1215,6 +1204,11 @@ do
 
         Library:GiveSignal(InputService.InputEnded:Connect(function(Input)
             if (not Picking) then
+                if KeyPicker.Mode == 'Hold' and (Input.KeyCode == KeyPicker.Value or Input.UserInputType == KeyPicker.Value) then
+                    KeyPicker.Toggled = not KeyPicker.Toggled;
+                    KeyPicker:DoClick();
+                end
+
                 KeyPicker:Update();
             end;
         end))
