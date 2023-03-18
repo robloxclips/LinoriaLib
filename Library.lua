@@ -2132,17 +2132,17 @@ do
             Parent = DropdownInner;
         });
 
-        local Keypoints = {}
-        for i = 0, 0.9 do
-            table.insert(Keypoints, NumberSequenceKeypoint.new(i, 0))
-        end
-        table.insert(Keypoints, NumberSequenceKeypoint.new(0.95, 0.75))
-        table.insert(Keypoints, NumberSequenceKeypoint.new(1, 1))
+        -- local Keypoints = {}
+        -- for i = 0, 0.9 do
+        --     table.insert(Keypoints, NumberSequenceKeypoint.new(i, 0))
+        -- end
+        -- table.insert(Keypoints, NumberSequenceKeypoint.new(0.95, 0.75))
+        -- table.insert(Keypoints, NumberSequenceKeypoint.new(1, 1))
 
-        Library:Create('UIGradient', {
-            Transparency = NumberSequence.new(Keypoints),
-            Parent = ItemList,
-        })
+        -- Library:Create('UIGradient', {
+        --     Transparency = NumberSequence.new(Keypoints),
+        --     Parent = ItemList,
+        -- })
 
         Library:OnHighlight(DropdownOuter, DropdownOuter,
             { BorderColor3 = 'AccentColor' },
