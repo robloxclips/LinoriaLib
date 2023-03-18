@@ -2046,6 +2046,7 @@ do
         local Dropdown = {
             Values = Info.UseValuesAsValue and GetDictKeys(Info.Values) or Info.Values;
             Value = Info.UseValuesAsValue and Info.Values or (Info.Multi and {} or nil);
+            UseNilValue = Info.UseNilValue,
             Multi = Info.Multi;
             Type = 'Dropdown';
             SpecialType = Info.SpecialType; -- can be either 'Player' or 'Team'
@@ -2310,13 +2311,18 @@ do
 
                         if Dropdown:GetActiveValues() == 1 and (not Try) and (not Info.AllowNull) then
                         else
+                            local FalseValue = false;
+                            if Dropdown.UseNilValue then
+                                FalseValue = nil;
+                            end
+
                             if Info.Multi then
                                 Selected = Try;
 
                                 if Selected then
                                     Dropdown.Value[Value] = true;
                                 else
-                                    Dropdown.Value[Value] = nil;
+                                    Dropdown.Value[Value] = FalseValue;
                                 end;
                             else
                                 Selected = Try;
@@ -2324,7 +2330,7 @@ do
                                 if Selected then
                                     Dropdown.Value = Value;
                                 else
-                                    Dropdown.Value = nil;
+                                    Dropdown.Value = FalseValue;
                                 end;
 
                                 for _, OtherButton in next, Buttons do
