@@ -888,6 +888,7 @@ do
             ChangedCallback = Info.ChangedCallback or function(New) end;
 
             SyncToggleState = Info.SyncToggleState or false;
+            IgnoreProcessedCheck = Info.IgnoreProcessedCheck or false;
         };
 
         function KeyPicker:NameToKey(Name)
@@ -1162,7 +1163,11 @@ do
                 wait(0.2);
 
                 local Event;
-                Event = InputService.InputBegan:Connect(function(Input)
+                Event = InputService.InputBegan:Connect(function(Input, gameProcessed)
+                    if (not KeyPicker.IgnoreProcessedCheck and gameProcessed) then
+                        return
+                    end
+
                     local Key = Input.KeyCode == Enum.KeyCode.Unknown and Input.UserInputType or Input.KeyCode;
 
                     Break = true;
@@ -1181,7 +1186,11 @@ do
             end;
         end);
 
-        Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
+        Library:GiveSignal(InputService.InputBegan:Connect(function(Input, gameProcessed)
+            if (not KeyPicker.IgnoreProcessedCheck and gameProcessed) then
+                return
+            end
+
             if (not Picking) then
                 if (KeyPicker.Mode == 'Toggle' or KeyPicker.Mode == 'Hold') and (Input.KeyCode == KeyPicker.Value or Input.UserInputType == KeyPicker.Value) then
                     KeyPicker.Toggled = not KeyPicker.Toggled;
@@ -1203,6 +1212,10 @@ do
         end))
 
         Library:GiveSignal(InputService.InputEnded:Connect(function(Input)
+            if (not KeyPicker.IgnoreProcessedCheck and gameProcessed) then
+                return
+            end
+
             if (not Picking) then
                 if KeyPicker.Mode == 'Hold' and (Input.KeyCode == KeyPicker.Value or Input.UserInputType == KeyPicker.Value) then
                     KeyPicker.Toggled = not KeyPicker.Toggled;
