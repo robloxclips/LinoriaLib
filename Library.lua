@@ -3319,12 +3319,12 @@ function Library:CreateWindow(...)
 
         Cursor:Remove();
     end
+InputService.InputBegan:Connect(function(Input, Processed)
+    if Library.ToggleKeybind and type(Library.ToggleKeybind) == "table" and IsKeyPressed(Library.ToggleKeybind.Value) then
+        task.spawn(Library.Toggle)
+    end
+end)
 
-    Library:GiveSignal(InputService.InputBegan:Connect(function(Input, Processed)
-        if Library.ToggleKeybind and typeof(Library.ToggleKeybind) == "table" and IsKeyPressed(Library.ToggleKeybind.Value) then
-            task.spawn(Library.Toggle)
-        end
-    end))
 
     if Config.AutoShow then task.spawn(Library.Toggle) end
 
