@@ -3319,11 +3319,21 @@ function Library:CreateWindow(...)
 
         Cursor:Remove();
     end
-InputService.InputBegan:Connect(function(Input, Processed)
-    if Library.ToggleKeybind and type(Library.ToggleKeybind) == "table" and IsKeyPressed(Library.ToggleKeybind.Value) then
-        task.spawn(Library.Toggle)
+
+local function OnKeyPress(input)
+    if input.KeyCode == Library.ToggleKeybind and input.UserInputType == Enum.UserInputType.Keyboard then
+           task.spawn(Library.Toggle)
     end
-end)
+end
+
+
+InputService.InputBegan:Connect(OnKeyPress)
+
+-- InputService.InputBegan:Connect(function(Input, Processed)
+--     if Library.ToggleKeybind and type(Library.ToggleKeybind) == "table" and IsKeyPressed(Library.ToggleKeybind.Value) then
+--         task.spawn(Library.Toggle)
+--     end
+-- end)
 
 
     if Config.AutoShow then task.spawn(Library.Toggle) end
