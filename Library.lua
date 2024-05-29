@@ -3320,12 +3320,15 @@ function Library:CreateWindow(...)
         Cursor:Remove();
     end
 
-local function OnKeyPress(input)
-    if input.KeyCode == Library.ToggleKeybind and input.UserInputType == Enum.UserInputType.Keyboard then
-           task.spawn(Library.Toggle)
-    end
+local function IsTyping()
+    return game:GetService("UserInputService"):GetFocusedTextBox() ~= nil
 end
 
+local function OnKeyPress(input)
+    if not IsTyping() and input.KeyCode == Library.ToggleKeybind and input.UserInputType == Enum.UserInputType.Keyboard then
+        task.spawn(Library.Toggle)
+    end
+end
 
 InputService.InputBegan:Connect(OnKeyPress)
 
